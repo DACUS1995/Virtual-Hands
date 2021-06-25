@@ -1,4 +1,10 @@
 {
-	"python.pythonPath": "C:\\Users\\DACUS\\Miniconda3\\envs\\torch\\python.exe",
-	"python.autoComplete.extraPaths": ["./hand_cursor", "./train"],
+	"python.autoComplete.extraPaths": [
+		"./hand_cursor",
+		"./train"
+	],
+	"python.analysis.extraPaths": [
+		"./hand_cursor",
+		"./train"
+	],
 }

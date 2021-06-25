@@ -20,12 +20,13 @@ class Cursor():
 		pui.moveRel(coordinates[0], coordinates[1], self.duration)
 
 	def get_position(self)->Tuple:
-		return pui.position(0)
+		return pui.position()
 
 	def set_position(self, coordinates)->None:
 		if coordinates[0] > self.screen_size[0] \
 			or coordinates[1] > self.screen_size[1]:
 			raise Exception(f"New position coordinates {coordinates} out of bounds.")
+		pui.moveTo(coordinates[0], coordinates[1])
 
 
 	def perform_action(self, action:CursorAction):
