@@ -1,9 +1,11 @@
 from enum import Enum
 from typing import Dict, Tuple, List
 import cv2
+import time
 
 from hand_detector import HandDetector, HandType
-from cursor import Cursor
+from cursor import Cursor, CursorAction
+import config
 
 
 class Controller():
@@ -11,6 +13,7 @@ class Controller():
 		self.hand_detector = hand_detector
 		self.cursor = cursor
 		self.is_running = False
+		self.last_action_timestamp = time.time()
 
 	def start(self):
 		self.is_running = True
@@ -42,8 +45,18 @@ class Controller():
 		landmark = landmarks.landmark
 		if type == HandType.OPEN_HAND:
 			coordinates = (
-				self.cursor.screen_size[0] * landmark[8].x,
-				self.cursor.screen_size[1] * landmark[8].y
+				self.cursor.screen_size[0] * landmark[config.OPEN_HAND_LANDMARK].x,
+				self.cursor.screen_size[1] * landmark[config.OPEN_HAND_LANDMARK].y
 			)
 			self.cursor.set_position(coordinates)
+		elif type == HandType.LEFT_CLICK_HAND:
+			self._perform_cursor_action(CursorAction.LEFT_CLICK_ACTION)
 
+	def _perform_cursor_action(self, action:CursorAction):
+		curr_time = time.time()
+		if curr_time - self.last_action_timestamp < 1:
+			return
+
+		self.last_action_timestamp = curr_time
+		self.cursor.perform_action(action)
+		

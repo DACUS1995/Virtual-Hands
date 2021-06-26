@@ -7,4 +7,5 @@
 		"./hand_cursor",
 		"./train"
 	],
+	"python.pythonPath": "C:\\Users\\Tudor\\miniconda3\\envs\\torch\\python.exe",
 }
