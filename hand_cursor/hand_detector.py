@@ -1,5 +1,6 @@
 import cv2
 import mediapipe as mp
+from mediapipe.python.solutions.hands import HandLandmark
 from enum import Enum
 from typing import Dict, Tuple, List
 
@@ -47,14 +48,48 @@ class HandDetector():
 
 	def _classify_hand_pose(self, hand_landmarks):
 		landmarks = hand_landmarks.landmark
-		if (landmarks[9].x - landmarks[8].x < config.CLICK_DISTANCE_THRESHOLD and
-			landmarks[9].y - landmarks[8].y < config.CLICK_DISTANCE_THRESHOLD):
+		if (landmarks[HandLandmark.INDEX_FINGER_MCP].x - landmarks[HandLandmark.INDEX_FINGER_TIP].x < config.LANDMARK_DISTANCE_THRESHOLD and
+			landmarks[HandLandmark.INDEX_FINGER_MCP].y - landmarks[HandLandmark.INDEX_FINGER_TIP].y < config.LANDMARK_DISTANCE_THRESHOLD):
 			print(landmarks[9].x - landmarks[8].x)
 			print(landmarks[9].y - landmarks[8].y)
 			return HandType.LEFT_CLICK_HAND
 
 		return HandType.OPEN_HAND
 
+	def _detect_fingers_pose(self, hand_landmarks):
+		landmarks = hand_landmarks.landmark
+
+		index_finger_open = True
+		middle_finger_open = True
+		ring_finger_open = True
+		pinky_finger_open = True
+
+		# INDEX FINGER
+		if (landmarks[HandLandmark.INDEX_FINGER_MCP].x - landmarks[HandLandmark.INDEX_FINGER_TIP].x < config.LANDMARK_DISTANCE_THRESHOLD and
+			landmarks[HandLandmark.INDEX_FINGER_MCP].y - landmarks[HandLandmark.INDEX_FINGER_TIP].y < config.LANDMARK_DISTANCE_THRESHOLD):
+			index_finger_open = False
+
+		# MIDDLE FINGER
+		if (landmarks[HandLandmark.MIDDLE_FINGER_MCP].x - landmarks[HandLandmark.MIDDLE_FINGER_TIP].x < config.LANDMARK_DISTANCE_THRESHOLD and
+			landmarks[HandLandmark.MIDDLE_FINGER_MCP].y - landmarks[HandLandmark.MIDDLE_FINGER_TIP].y < config.LANDMARK_DISTANCE_THRESHOLD):
+			middle_finger_open = False
+
+		# RING FINGER
+		if (landmarks[HandLandmark.RING_FINGER_MCP].x - landmarks[HandLandmark.RING_FINGER_TIP].x < config.LANDMARK_DISTANCE_THRESHOLD and
+			landmarks[HandLandmark.RING_FINGER_MCP].y - landmarks[HandLandmark.RING_FINGER_TIP].y < config.LANDMARK_DISTANCE_THRESHOLD):
+			ring_finger_open = False
+
+		# PINKY FINGER
+		if (landmarks[HandLandmark.PINKY_FINGER_MCP].x - landmarks[HandLandmark.PINKY_FINGER_TIP].x < config.LANDMARK_DISTANCE_THRESHOLD and
+			landmarks[HandLandmark.PINKY_FINGER_MCP].y - landmarks[HandLandmark.PINKY_FINGER_TIP].y < config.LANDMARK_DISTANCE_THRESHOLD):
+			pinky_finger_open = False
+
+		return {
+			"index_finger_open": index_finger_open,
+			"middle_finger_open": middle_finger_open,
+			"ring_finger_open": ring_finger_open,
+			"pinky_finger_open": pinky_finger_open,
+		} 
 
 if __name__ == "__main__":
 	detector = HandDetector()
