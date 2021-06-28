@@ -48,16 +48,24 @@ class HandDetector():
 
 	def _classify_hand_pose(self, hand_landmarks):
 		landmarks = hand_landmarks.landmark
-		if (landmarks[HandLandmark.INDEX_FINGER_MCP].x - landmarks[HandLandmark.INDEX_FINGER_TIP].x < config.LANDMARK_DISTANCE_THRESHOLD and
-			landmarks[HandLandmark.INDEX_FINGER_MCP].y - landmarks[HandLandmark.INDEX_FINGER_TIP].y < config.LANDMARK_DISTANCE_THRESHOLD):
-			print(landmarks[9].x - landmarks[8].x)
-			print(landmarks[9].y - landmarks[8].y)
+
+		fingers_pose = self._detect_fingers_pose(landmarks)
+
+		if (fingers_pose["index_finger_open"] and 
+			not any({key:fingers_pose[key] for key in fingers_pose if key != "index_finger_open"}.values())):
 			return HandType.LEFT_CLICK_HAND
+
+		if not all(fingers_pose.values()):
+			return HandType.CLOSE_HAND
+		
+		# if (landmarks[HandLandmark.INDEX_FINGER_MCP].x - landmarks[HandLandmark.INDEX_FINGER_TIP].x < config.LANDMARK_DISTANCE_THRESHOLD and
+		# 	landmarks[HandLandmark.INDEX_FINGER_MCP].y - landmarks[HandLandmark.INDEX_FINGER_TIP].y < config.LANDMARK_DISTANCE_THRESHOLD):
+		# 	print(landmarks[9].x - landmarks[8].x)
+		# 	print(landmarks[9].y - landmarks[8].y)
 
 		return HandType.OPEN_HAND
 
-	def _detect_fingers_pose(self, hand_landmarks):
-		landmarks = hand_landmarks.landmark
+	def _detect_fingers_pose(self, landmarks):
 
 		index_finger_open = True
 		middle_finger_open = True
@@ -80,8 +88,8 @@ class HandDetector():
 			ring_finger_open = False
 
 		# PINKY FINGER
-		if (landmarks[HandLandmark.PINKY_FINGER_MCP].x - landmarks[HandLandmark.PINKY_FINGER_TIP].x < config.LANDMARK_DISTANCE_THRESHOLD and
-			landmarks[HandLandmark.PINKY_FINGER_MCP].y - landmarks[HandLandmark.PINKY_FINGER_TIP].y < config.LANDMARK_DISTANCE_THRESHOLD):
+		if (landmarks[HandLandmark.PINKY_MCP].x - landmarks[HandLandmark.PINKY_TIP].x < config.LANDMARK_DISTANCE_THRESHOLD and
+			landmarks[HandLandmark.PINKY_MCP].y - landmarks[HandLandmark.PINKY_TIP].y < config.LANDMARK_DISTANCE_THRESHOLD):
 			pinky_finger_open = False
 
 		return {

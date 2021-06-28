@@ -51,6 +51,10 @@ class Controller():
 			self.cursor.set_position(coordinates)
 		elif type == HandType.LEFT_CLICK_HAND:
 			self._perform_cursor_action(CursorAction.LEFT_CLICK_ACTION)
+		elif type == HandType.CLOSE_HAND:
+			pass
+		else:
+			raise Exception("Unhandled hand type")
 
 	def _perform_cursor_action(self, action:CursorAction):
 		curr_time = time.time()
