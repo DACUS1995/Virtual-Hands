@@ -14,11 +14,16 @@ class HandType(Enum):
 	OPEN_HAND = 1
 	CLOSE_HAND = 2
 	LEFT_CLICK_HAND = 3
+	FIST_HAND = 4
+	PEACE_HAND = 5
+	PROSPER_HAND = 6
+
 
 class HandDetector():
-	def __init__(self, mode:str = "mediapipe", show:bool =True):
+	def __init__(self, mode:str = "mediapipe", show:bool = True, hand_pose_classifier = None):
 		self.mode = mode
 		self.show = show 
+		self.hand_pose_classifier = hand_pose_classifier
 
 	def detect(self, image):
 
@@ -41,7 +46,11 @@ class HandDetector():
 					if self.show:
 						cv2.imshow("Hands", image)
 
-					hand_type = self._classify_hand_pose(results.multi_hand_landmarks[0])
+					if self.hand_pose_classifier == None:
+						hand_type = self._classify_hand_pose(results.multi_hand_landmarks[0])
+					else:
+						hand_type = self.hand_pose_classifier.classify(results.multi_hand_landmarks[0])
+
 					return results.multi_hand_landmarks[0], hand_type
 				else:
 					return None

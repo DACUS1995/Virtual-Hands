@@ -44,6 +44,7 @@ class Controller():
 
 	def _update(self, landmarks, type:HandType):
 		landmark = landmarks.landmark
+		
 		if type == HandType.OPEN_HAND:
 			if self._last_open_hand_coordinates is not None:
 				coordinates = (

@@ -4,10 +4,13 @@ import time
 from cursor import Cursor
 from hand_detector import HandDetector
 from controller import Controller
+from hand_pose_classfier import HandPoseClassifier
 
 def main(args):
 	cursor = Cursor()
-	hand_detector = HandDetector()
+	hand_detector = HandDetector(
+		hand_pose_classifier=HandPoseClassifier(model_path="trained_models/random_forest_classifier.pkl")
+	)
 	controller = Controller(hand_detector, cursor)
 	controller.start()
 
