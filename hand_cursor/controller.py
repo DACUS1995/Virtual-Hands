@@ -56,6 +56,10 @@ class Controller():
 			self._perform_cursor_action(CursorAction.LEFT_CLICK_ACTION)
 		elif type == HandType.CLOSE_HAND:
 			pass
+		elif type == HandType.FIST_HAND:
+			pass
+		elif type == HandType.PROSPER_HAND:
+			pass
 		else:
 			raise Exception("Unhandled hand type")
 

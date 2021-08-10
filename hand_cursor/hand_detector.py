@@ -32,9 +32,11 @@ class HandDetector():
 			min_tracking_confidence=0.5) as hands:
 				image.flags.writeable = False
 				results = hands.process(image)
+
 				# Draw the hand annotations on the image.
 				image.flags.writeable = True
 				image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+				
 				if results.multi_hand_landmarks:
 					for hand_landmarks in results.multi_hand_landmarks:
 						mp_drawing.draw_landmarks(
@@ -66,11 +68,6 @@ class HandDetector():
 
 		if not all(fingers_pose.values()):
 			return HandType.CLOSE_HAND
-		
-		# if (landmarks[HandLandmark.INDEX_FINGER_MCP].x - landmarks[HandLandmark.INDEX_FINGER_TIP].x < config.LANDMARK_DISTANCE_THRESHOLD and
-		# 	landmarks[HandLandmark.INDEX_FINGER_MCP].y - landmarks[HandLandmark.INDEX_FINGER_TIP].y < config.LANDMARK_DISTANCE_THRESHOLD):
-		# 	print(landmarks[9].x - landmarks[8].x)
-		# 	print(landmarks[9].y - landmarks[8].y)
 
 		return HandType.OPEN_HAND
 

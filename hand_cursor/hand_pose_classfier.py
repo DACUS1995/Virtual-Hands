@@ -14,7 +14,7 @@ CLASS_TO_HAND_TYPE = {
 }
 
 class HandPoseClassifier:
-	def __init__(self, model_path, model_type="random_forest_classifier") -> None:
+	def __init__(self, model_path, model_type="random_forest_classifier") -> HandType:
 		self.model_type = model_type
 		self.model_path = model_path
 		self.model = self._load_model()
@@ -23,7 +23,7 @@ class HandPoseClassifier:
 		if not isinstance(landmarks, np.ndarray):
 			landmarks = self.preprocess(landmarks)
 
-		return self.model.predict(landmarks)
+		return self.class_to_hand_type(self.model.predict(landmarks))
 
 	def preprocess(self, landmarks)->np.ndarray:
 		landmarks = list(landmarks.landmark)
